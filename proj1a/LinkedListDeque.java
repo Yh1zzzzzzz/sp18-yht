@@ -8,7 +8,7 @@ public class LinkedListDeque<T> {
         public Node(T t , Node next, Node upxt){
             item = t;
             before  = upxt;
-            after = next;
+            after = next;   
         }
     }
     public LinkedListDeque(){
@@ -33,17 +33,32 @@ public class LinkedListDeque<T> {
         size += 1;
     }
     public void addFirst(T item){
-        Node first_before = first.after;
-        first_before.before = new Node(item,first_before,first);
-        size += 1;
+        if (size == 0){
+            Node node_new = new Node(item,null,null)  ;
+            first.after = node_new;
+            first.before = node_new;
+            node_new.before = first;
+            node_new.after = first;
+            size += 1;
 
+        }else {
+            Node first_before = first.after;
+            Node node_new = new Node(item,null,null) ;
+            first_before.before = node_new;
+            first.after = node_new;
+            node_new.after = first_before;
+            node_new.before = first;
+            size += 1;
+        }
     }
     public void addLast(T item){
-        Node last_now = new Node(item,first,null);
+        Node last_new = new Node(item,null,null);
         //last_now up to be filled
-        Node last_before = first.after;
-        last_before.after = last_now;
-        last_now.before = last_before;
+        Node last_before = first.before;
+        last_before.after = last_new;
+        first.before = last_new;
+        last_new.before = last_before;
+        last_new.after = first;
         size += 1;
     }
     public boolean isEmpty(){
@@ -69,6 +84,7 @@ public class LinkedListDeque<T> {
             return null;
         }
         Node returnnode = first.after;
+        T return_item = returnnode.item;
         if (size ==1){
             first.after = first;
             first.before = first;
@@ -81,7 +97,7 @@ public class LinkedListDeque<T> {
 
         }
         size -= 1;
-        return returnnode.item;
+        return return_item;
 
     }
     public T removeLast(){
@@ -89,6 +105,7 @@ public class LinkedListDeque<T> {
             return null;
         }
         Node re = first.before;
+        T return_value = re.item;
         if (size ==1){
             first.after = first;
             first.before = first;
@@ -98,7 +115,7 @@ public class LinkedListDeque<T> {
             first.before = first.before.before;
         }
         size -= 1;
-        return  re.item;
+        return  return_value;
 
     }
     private T getRecursiveHelp(Node start, int index) {

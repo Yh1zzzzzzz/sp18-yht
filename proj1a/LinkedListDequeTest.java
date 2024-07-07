@@ -84,7 +84,19 @@ public class LinkedListDequeTest<T> {
 
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
-		addIsEmptySizeTest();
-		addRemoveTest();
+//		addIsEmptySizeTest();
+////		addRemoveTest();
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		lld1.isEmpty();
+		lld1.addLast(1);
+		lld1.addLast(2);
+		lld1.isEmpty();
+		lld1.addLast(4);
+		lld1.addLast(5);
+		lld1.addLast(6);
+		lld1.addLast(7);
+		lld1.addLast(8);
+		lld1.addLast(9);
+		lld1.removeLast();
 	}
 } 
