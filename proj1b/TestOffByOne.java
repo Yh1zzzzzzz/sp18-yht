@@ -17,7 +17,7 @@ public class TestOffByOne {
         OffByOne cc = new OffByOne();
         Palindrome a = new Palindrome();
         assertTrue(a.isPalindrome("a",cc));
-        assertTrue(a.isPalindrome("ab",cc));
+        assertTrue(a.isPalindrome("aba",cc));
         assertTrue(a.isPalindrome("flake",cc));
 
 
