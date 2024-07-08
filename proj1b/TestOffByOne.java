@@ -8,5 +8,18 @@ public class TestOffByOne {
     static CharacterComparator offByOne = new OffByOne();
 
     // Your tests go here.
+
+
     Uncomment this class once you've created your CharacterComparator interface and OffByOne class. **/
+    @Test
+    public void test2(){
+
+        OffByOne cc = new OffByOne();
+        Palindrome a = new Palindrome();
+        assertTrue(a.isPalindrome("a",cc));
+        assertTrue(a.isPalindrome("ab",cc));
+        assertTrue(a.isPalindrome("flake",cc));
+
+
+    }
 }
