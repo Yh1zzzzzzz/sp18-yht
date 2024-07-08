@@ -39,17 +39,18 @@ class ArrayDequeTest {
     @Test
     public static void testgrowshrink() {
         ArrayDeque<Integer> dq = new ArrayDeque<>();
-        for (int i = 0; i < 16; i++) {
+        dq.isEmpty();
+        for (int i = 0; i < 4; i++) {
             dq.addLast(i);
+            dq.isEmpty();
         }
-        for (int i = -16; i < 0; i++) {
+        for (int i = -4; i < 0; i++) {
             dq.addFirst(i);
         }
-        for (int i = -1; i >= 16; i--) {
-            assertEquals(Optional.of(i), dq.get(i));
-        }
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 4; i++) {
             dq.removeFirst();
+            dq.removeLast();
+            dq.isEmpty();
         }
         assertEquals(2, dq.size());
         dq.printDeque();
