@@ -53,7 +53,7 @@ public class ArrayDeque <T> {
         T to_return = Arry[0];
         reform();
         size -= 1;
-        if (get_lenth() >= 4 * size){
+        if (get_lenth() >= 4 * size && size != 0){
             resize(size * 2);
         }
         return to_return;
@@ -61,11 +61,16 @@ public class ArrayDeque <T> {
     public T removeLast(){
         if (size == 0){
             return null;
+        } else if (size == 1) {
+            T n = Arry[size-1];
+            Arry[size-1] = null;
+            size -= 1;
+            return n;
         }
-         T n = Arry[size-1];
+        T n = Arry[size-1];
         Arry[size-1] = null;
         size -= 1;
-        if (get_lenth() >= 4 * size){
+        if (get_lenth() >= 4 * size && size != 0){
             resize(size * 2);
         }
         return n;

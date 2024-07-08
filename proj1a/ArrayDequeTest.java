@@ -55,7 +55,16 @@ class ArrayDequeTest {
         assertEquals(2, dq.size());
         dq.printDeque();
     }
+    public static void test(){
+        ArrayDeque<Integer> ad = new ArrayDeque();
+        ad.addFirst(0);
+        ad.get(0)      ;
+        ad.get(0)      ;
+        ad.removeFirst();
+        ad.addFirst(4);
+    }
     public static void main(String[] args) {
-        testgrowshrink();
+        //testgrowshrink();
+        test();
     }
 }
