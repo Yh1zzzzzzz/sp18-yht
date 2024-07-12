@@ -26,7 +26,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         this.clear();
     }
 
-    /* Removes all of the mappings from this map. */
+    /* Removes all the mappings from this map. */
     @Override
     public void clear() {
         this.size = 0;
@@ -43,7 +43,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         if (key == null) {
             return 0;
         }
-
         int numBuckets = buckets.length;
         return Math.floorMod(key.hashCode(), numBuckets);
     }
@@ -53,19 +52,47 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int a = hash(key);
+        return buckets[hash(key)].get(key);
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        int si = loadFactor();
+        if (si >= MAX_LF) {
+            resize(2 * size);
+        }
+        if (containsKey(key)) {
+            for (int i = 0; i < buckets.length; i += 1) {
+                if (buckets[i].containsKey(key)) {
+                    buckets[i].remove(key);
+                    buckets[i].put(key, value);
+                    return;
+                }
+            }
+        }
+        buckets[hash(key)].put(key, value);
+        size += 1;
+
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
+    }
+
+    public void resize(int l) {
+        ArrayMap<K, V>[] temp = new ArrayMap[l];
+        for (int i = 0; i < temp.length; i += 1) {
+            temp[i] = new ArrayMap<>();
+        }
+        for (int i = 0; i < buckets.length; i += 1) {
+            temp[i] = buckets[i];
+        }
+        buckets = temp;
+
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
