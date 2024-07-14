@@ -128,13 +128,13 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         int left = leftIndex(index);
         int right = rightIndex(index);
         int smallest = min(left, right);
-        if (min(index,left) == left && min(index, right) == index) {
+        if (min(index, left) == left && min(index, right) == index) {
             swap(index, left);
             sink(left);
-        } else if (min(index,right) == right && min(index, left) == index) {
+        } else if (min(index, right) == right && min(index, left) == index) {
             swap(index, right);
             sink(right);
-        } else if (min(index,left) == left && min(index, right) == right) {
+        } else if (min(index, left) == left && min(index, right) == right) {
             swap(index, smallest);
             sink(smallest);
         }
@@ -155,7 +155,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         Node inseredNode = new Node(item, priority);
         contents[size + 1] = inseredNode;
         size += 1;
-        swim(size );
+        swim(size);
 
 
     }
@@ -277,7 +277,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             myPriority = priority;
         }
 
-        public T item(){
+        public T item() {
             return myItem;
         }
 
