@@ -69,7 +69,7 @@ public class SeamCarverVisualizer {
 
     private void paintVerticalSeam(Picture p, int[] seam) {
         for (int i = 0; i < seam.length; i++) {
-            p.set(seam[i], i, new Color(255, 0, 0));
+            p.set(seam[i], i, new Color(198, 51, 51));
         }
     }
 

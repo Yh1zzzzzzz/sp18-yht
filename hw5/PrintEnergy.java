@@ -11,7 +11,7 @@
 
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
-
+//PrintEnergy.java: For printing the energy calculations per pixel for an input image.
 public class PrintEnergy {
 
     public static void main(String[] args) {
