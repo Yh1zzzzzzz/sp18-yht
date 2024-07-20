@@ -13,7 +13,13 @@ public class SeamCarver {
         height = picture.height();
     }
     public Picture picture() {
-        return currentPicture;
+        Picture re = new Picture(width, height);
+        for (int i = 0; i < width; i += 1){
+            for (int j = 0; j < height; j += 1) {
+                re.set(i,j,currentPicture.get(i, j));
+            }
+        }
+        return re;
     }                     // current picture
     public     int width() {
         return width;
@@ -66,41 +72,50 @@ public class SeamCarver {
     }            // sequence of indices for horizontal seam
     public   int[] findVerticalSeam() {
         int[][] returnArray = new int[width][height];
+        double[] cost = new double[width];
         for (int i = 0; i < width; i += 1) {
             returnArray[i][0] = i;
+            cost[i] += energy(i, 0);
         }
         int index = 1;
         while (index < height) {
             for (int i = 0; i < width; i += 1) {
                 //加入子序列的最小一个
-                if (i == 0) {
-                    if (Math.min(energy(i, index), energy(i + 1, index)) == energy(i, index)) {
-                        returnArray[i][index] = i;
+                if (returnArray[i][index - 1] == 0) {
+                    if (Math.min(energy(returnArray[i][index - 1], index), energy(returnArray[i][index - 1] + 1, index)) == energy(returnArray[i][index - 1], index)) {
+                        returnArray[i][index] = returnArray[i][index - 1];
+                        cost[i] += energy(returnArray[i][index - 1], index);
                     } else {
-                        returnArray[i][index] = i + 1;
+                        returnArray[i][index] = returnArray[i][index - 1] + 1;
+                        cost[i] += energy(returnArray[i][index - 1] + 1, index);
                     }
-                } else if (i == width - 1) {
-                    if (Math.min(energy(i, index), energy(i - 1, index)) == energy(i, index)) {
-                        returnArray[i][index] = i;
+                } else if (returnArray[i][index - 1] == width - 1) {
+                    if (Math.min(energy(returnArray[i][index - 1], index), energy(returnArray[i][index - 1] - 1, index)) == energy(returnArray[i][index - 1], index)) {
+                        returnArray[i][index] = returnArray[i][index - 1];
+                        cost[i] += energy(returnArray[i][index - 1], index);
                     } else {
-                        returnArray[i][index] = i - 1;
+                        returnArray[i][index] = returnArray[i][index - 1] - 1;
+                        cost[i] += energy(returnArray[i][index - 1] - 1, index);
                     }
                 } else {
-                    if (Math.min(Math.min(energy(i, index),
-                            energy(i - 1, index)), energy(i + 1, index)) == energy(i, index)) {
-                        returnArray[i][index] = i;
-                    } else if (Math.min(Math.min(energy(i, index), energy(i - 1, index)),
-                            energy(i + 1, index)) == energy(i + 1, index)) {
-                        returnArray[i][index] = i + 1;
+                    if (Math.min(Math.min(energy(returnArray[i][index - 1], index),
+                            energy(returnArray[i][index - 1] - 1, index)), energy(returnArray[i][index - 1] + 1, index)) == energy(returnArray[i][index - 1], index)) {
+                        returnArray[i][index] = returnArray[i][index - 1];
+                        cost[i] += energy(returnArray[i][index - 1], index);
+                    } else if (Math.min(Math.min(energy(returnArray[i][index - 1], index), energy(returnArray[i][index - 1] - 1, index)),
+                            energy(returnArray[i][index - 1] + 1, index)) == energy(returnArray[i][index - 1] + 1, index)) {
+                        returnArray[i][index] = returnArray[i][index - 1] + 1;
+                        cost[i] += energy(returnArray[i][index - 1] + 1, index);
                     } else {
-                        returnArray[i][index] = i - 1;
+                        returnArray[i][index] = returnArray[i][index - 1] - 1;
+                        cost[i] += energy(returnArray[i][index - 1] - 1, index);
                     }
 
                 }
             }
             index += 1;
         }
-        return returnArray[smallestCost(width, height)];
+        return returnArray[smallestCost(cost)];
 
     }              // sequence of indices for vertical seam
     public    void removeHorizontalSeam(int[] seam) {
@@ -129,25 +144,7 @@ public class SeamCarver {
     /*
     * 返回最小列的列标
     * */
-    private int smallestCost(int w, int h) {
-        double[] cost = new double[w];
-        for (int i = 0; i < w; i += 1) {
-            cost[i] += energy(i, 0);
-        }
-        int index = 1;
-        while (index < h) {
-            for (int i = 0; i < w; i += 1) {
-                //加入子序列的最小一个
-                if (i == 0) {
-                    cost[i] += Math.min(energy(i, index), energy(i + 1, index));
-                } else if (i == width - 1) {
-                    cost[i] += Math.min(energy(i, index), energy(i - 1, index));
-                } else {
-                    cost[i] += Math.min(Math.min(energy(i, index), energy(i - 1, index)), energy(i + 1, index));
-                }
-            }
-            index += 1;
-        }
+    private int smallestCost(double[] cost) {
         double min = cost[0];
         int ind = 0;
         for (int i = 0; i < cost.length; i += 1) {
