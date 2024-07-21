@@ -8,18 +8,12 @@ public class SeamCarver {
     private int height;
 
     public SeamCarver(Picture picture) {
-        currentPicture = picture;
+        currentPicture = new Picture(picture);
         width = picture.width();
         height = picture.height();
     }
     public Picture picture() {
-        Picture re = new Picture(width, height);
-        for (int i = 0; i < width; i += 1){
-            for (int j = 0; j < height; j += 1) {
-                re.set(i,j,currentPicture.get(i, j));
-            }
-        }
-        return re;
+        return new Picture(currentPicture);
     }                     // current picture
     public     int width() {
         return width;
@@ -28,7 +22,7 @@ public class SeamCarver {
         return height;
     }                       // height of current picture
     public  double energy(int x, int y) {
-        if (x >= width || y >= height) {
+        if (x >= width || y >= height || x < 0 || y < 0) {
             throw new IndexOutOfBoundsException();
         }
         Color up;
@@ -71,52 +65,45 @@ public class SeamCarver {
         return item;
     }            // sequence of indices for horizontal seam
     public   int[] findVerticalSeam() {
-        int[][] returnArray = new int[width][height];
-        double[] cost = new double[width];
-        for (int i = 0; i < width; i += 1) {
-            returnArray[i][0] = i;
-            cost[i] += energy(i, 0);
-        }
-        int index = 1;
-        while (index < height) {
-            for (int i = 0; i < width; i += 1) {
-                //加入子序列的最小一个
-                if (returnArray[i][index - 1] == 0) {
-                    if (Math.min(energy(returnArray[i][index - 1], index), energy(returnArray[i][index - 1] + 1, index)) == energy(returnArray[i][index - 1], index)) {
-                        returnArray[i][index] = returnArray[i][index - 1];
-                        cost[i] += energy(returnArray[i][index - 1], index);
-                    } else {
-                        returnArray[i][index] = returnArray[i][index - 1] + 1;
-                        cost[i] += energy(returnArray[i][index - 1] + 1, index);
-                    }
-                } else if (returnArray[i][index - 1] == width - 1) {
-                    if (Math.min(energy(returnArray[i][index - 1], index), energy(returnArray[i][index - 1] - 1, index)) == energy(returnArray[i][index - 1], index)) {
-                        returnArray[i][index] = returnArray[i][index - 1];
-                        cost[i] += energy(returnArray[i][index - 1], index);
-                    } else {
-                        returnArray[i][index] = returnArray[i][index - 1] - 1;
-                        cost[i] += energy(returnArray[i][index - 1] - 1, index);
-                    }
+        double[][] energyMatrix = new double[height][width];
+        double[][] distTo = new double[height][width];
+        int[][] edgeTo = new int[height][width];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                energyMatrix[y][x] = energy(x, y);
+                if (y == 0) {
+                    distTo[y][x] = energy(x, y);
                 } else {
-                    if (Math.min(Math.min(energy(returnArray[i][index - 1], index),
-                            energy(returnArray[i][index - 1] - 1, index)), energy(returnArray[i][index - 1] + 1, index)) == energy(returnArray[i][index - 1], index)) {
-                        returnArray[i][index] = returnArray[i][index - 1];
-                        cost[i] += energy(returnArray[i][index - 1], index);
-                    } else if (Math.min(Math.min(energy(returnArray[i][index - 1], index), energy(returnArray[i][index - 1] - 1, index)),
-                            energy(returnArray[i][index - 1] + 1, index)) == energy(returnArray[i][index - 1] + 1, index)) {
-                        returnArray[i][index] = returnArray[i][index - 1] + 1;
-                        cost[i] += energy(returnArray[i][index - 1] + 1, index);
-                    } else {
-                        returnArray[i][index] = returnArray[i][index - 1] - 1;
-                        cost[i] += energy(returnArray[i][index - 1] - 1, index);
-                    }
-
+                    distTo[y][x] = Double.POSITIVE_INFINITY;
                 }
             }
-            index += 1;
         }
-        return returnArray[smallestCost(cost)];
 
+        for (int y = 0; y < height - 1; y++) {
+            for (int x = 0; x < width; x++) {
+                for (int i = -1; i <= 1; i++) {
+                    if (x + i >= 0 && x + i < width && distTo[y + 1][x + i] > distTo[y][x] + energyMatrix[y + 1][x + i]) {
+                        distTo[y + 1][x + i] = distTo[y][x] + energyMatrix[y + 1][x + i];
+                        edgeTo[y + 1][x + i] = x;
+                    }
+                }
+            }
+        }
+        double minDist = Double.POSITIVE_INFINITY;
+        int minIndex = -1;
+        for (int x = 0; x < width; x++) {
+            if (distTo[height - 1][x] < minDist) {
+                minDist = distTo[height - 1][x];
+                minIndex = x;
+            }
+        }
+        int[] seam = new int[height];
+        for (int y = height - 1; y >= 0; y--) {
+            seam[y] = minIndex;
+            minIndex = edgeTo[y][minIndex];
+        }
+
+        return seam;
     }              // sequence of indices for vertical seam
     public    void removeHorizontalSeam(int[] seam) {
         if (seam.length != width) {
