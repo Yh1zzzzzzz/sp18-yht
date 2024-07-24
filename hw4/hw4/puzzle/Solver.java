@@ -1,62 +1,60 @@
 package hw4.puzzle;
 import edu.princeton.cs.algs4.MinPQ;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Solver {
     private class Node implements Comparable<Node> {
         private WorldState ws;
         private int moveCounter;
         private Node parent;
+        int estMove = -1;
 
 
         @Override
         public int compareTo(Node o) {
-            return this.ws.estimatedDistanceToGoal() - o.ws.estimatedDistanceToGoal();
+            if (this.estMove < 0) {
+                this.estMove = this.ws.estimatedDistanceToGoal();
+            }
+            if (o.estMove < 0) {
+                o.estMove = o.ws.estimatedDistanceToGoal();
+            }
+            return this.estMove + this.moveCounter - o.estMove - o.moveCounter;
         }
     }
 
 
-
-
     private MinPQ<Node> NodePQ = new MinPQ<>();
-    private List<WorldState> bestWay ;
-    private Set<WorldState> parents;
+    private List<WorldState> bestWay = new ArrayList<>() ;
+
     private int move = 0;
-
-
 
 
     public Solver(WorldState initial) {
         Node newNode = createNode(initial);
         NodePQ.insert(newNode);
-        /*
-        *
-        * 1.将邻居全部送入PQ
-        * 3.将自己移除PQ
-        * 2.将自己添加到最佳队列、将自己添加到家长队列
-        * 4.更新initial
-        * */
 
 
-        while (!initial.isGoal()) {
+        while (true) {
             Node n = NodePQ.delMin();
             addneibortoPQ(n);
-            bestWay.addLast(n.ws);
-            parents.add(n.ws);
             initial = n.ws;
-            move += 1;
+            if (initial.isGoal()) {
+                move = n.moveCounter;
+                construct(n);
+                break;
+            }
         }
 
     }
     public int moves() {
-        return move - 1;
+        return move ;
     }
     public Iterable<WorldState> solution() {
         return bestWay;
     }
+
     private Node createNode(WorldState initial) {
         Node f = new Node();
         f.moveCounter = 0;
@@ -65,20 +63,24 @@ public class Solver {
         return f;
     }
     private void addneibortoPQ(Node s) {
-        int m = s.moveCounter + 1;
-        Iterator<WorldState> it = s.ws.neighbors().iterator();
-        while (it.hasNext()) {
+        for (WorldState a : s.ws.neighbors()) {
+            int m = s.moveCounter + 1;
             Node temp = new Node();
-            WorldState tws = it.next();
+            WorldState tws = a;
             temp.moveCounter = m;
             temp.parent = s;
             temp.ws = tws;
-            if (!parents.contains(tws)) {
+            if (s.parent == null || !tws.equals(s.parent.ws)) {
                 NodePQ.insert(temp);
             }
         }
+    }
 
-
+    private void construct(Node node) {
+        while (node != null) {
+            bestWay.addFirst(node.ws);
+            node = node.parent;
+        }
     }
 
 }

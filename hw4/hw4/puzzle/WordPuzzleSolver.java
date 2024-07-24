@@ -1,14 +1,16 @@
 package hw4.puzzle;
 import edu.princeton.cs.algs4.StdOut;
+import org.junit.Test;
 
 public class WordPuzzleSolver {
     /***********************************************************************
      * Test routine for your Solver class. Uncomment and run to test
      * your basic functionality.
      **********************************************************************/
+    @Test
     public static void main(String[] args) {
-        String start = "cube";
-        String goal = "tubes";
+        String start = "horse";
+        String goal = "nurse";
 
         Word startState = new Word(start, goal);
         Solver solver = new Solver(startState);
