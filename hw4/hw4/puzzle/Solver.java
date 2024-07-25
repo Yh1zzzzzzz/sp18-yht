@@ -63,6 +63,9 @@ public class Solver {
         return f;
     }
     private void addneibortoPQ(Node s) {
+        if (s.ws.neighbors() == null) {
+            return;
+        }
         for (WorldState a : s.ws.neighbors()) {
             int m = s.moveCounter + 1;
             Node temp = new Node();
