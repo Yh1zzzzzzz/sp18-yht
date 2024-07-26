@@ -48,22 +48,22 @@ public class QuickSort {
     private static <Item extends Comparable> void partition(
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
-                for (Item i : unsorted) {
-                    if (i.compareTo(pivot) == 0) {
-                        equal.enqueue(i);
-                    } else if (i.compareTo(pivot) > 0) {
-                        greater.enqueue(i);
-                    } else {
-                        less.enqueue(i);
-                    }
+            for (Item i : unsorted) {
+                if (i.compareTo(pivot) == 0) {
+                    equal.enqueue(i);
+                } else if (i.compareTo(pivot) > 0) {
+                    greater.enqueue(i);
+                } else {
+                    less.enqueue(i);
                 }
-        // Your code here!
+            }
+            // Your code here!
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        if (items.size() == 1) {
+        if (items.size() <= 1) {
             return items;
         }
         Queue<Item> less = new Queue<>();
@@ -85,7 +85,23 @@ public class QuickSort {
         students.enqueue("Vanessa");
         students.enqueue("Alice");
         students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
         System.out.print(students);
+        System.out.print('\n');
         students = QuickSort.quickSort(students);
         System.out.print(students);
     }
