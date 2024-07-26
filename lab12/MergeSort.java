@@ -77,6 +77,7 @@ public class MergeSort {
         }
         Queue<Queue<Item>> temp = makeSingleItemQueues(items);
         Queue<Queue<Item>> yht = new Queue<>();
+        //Queue<Queue<Item>> re = new Queue<>();
         while (!temp.isEmpty()) {
             if (temp.size() == 1) {
                 yht.enqueue(temp.dequeue());
@@ -85,15 +86,31 @@ public class MergeSort {
             yht.enqueue(mergeSortedQueues(temp.dequeue(), temp.dequeue()));
         }
         while (yht.size() > 1) {
-            Queue<Queue<Item>> re = new Queue<>();
-            re.enqueue(mergeSortedQueues(yht.dequeue(), yht.dequeue()));
-            yht = re;
+            yht.enqueue(mergeSortedQueues(yht.dequeue(), yht.dequeue()));
         }
         return yht.dequeue();
     }
     @Test
     public void main() {
         Queue<String> students = new Queue<String>();
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
+        students.enqueue("Vanessa");
+        students.enqueue("Alice");
+        students.enqueue("Ethan");
         students.enqueue("Vanessa");
         students.enqueue("Alice");
         students.enqueue("Ethan");
