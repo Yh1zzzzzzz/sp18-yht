@@ -78,13 +78,7 @@ public class MergeSort {
         Queue<Queue<Item>> temp = makeSingleItemQueues(items);
         Queue<Queue<Item>> yht = new Queue<>();
         //Queue<Queue<Item>> re = new Queue<>();
-        while (!temp.isEmpty()) {
-            if (temp.size() == 1) {
-                yht.enqueue(temp.dequeue());
-                break;
-            }
-            yht.enqueue(mergeSortedQueues(temp.dequeue(), temp.dequeue()));
-        }
+        yht = temp;
         while (yht.size() > 1) {
             yht.enqueue(mergeSortedQueues(yht.dequeue(), yht.dequeue()));
         }
