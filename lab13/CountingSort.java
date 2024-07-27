@@ -36,7 +36,7 @@ public class CountingSort {
             }
         }
 
-        // however, below is a more proper, generalized implementation of
+        // however, below is a more proper, generalizLed implementation of
         // counting sort that uses start position calculation
         int[] starts = new int[max + 1];
         int pos = 0;
@@ -67,6 +67,39 @@ public class CountingSort {
      */
     public static int[] betterCountingSort(int[] arr) {
         // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int max = Integer.MIN_VALUE;
+        for (int i : arr) {
+            max = max > i ? max : i;
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i : arr) {
+            min = Math.min(i, min);
+        }
+        int R = max - min + 1;
+        int[] count = new int[R];
+        for (int i : arr) {
+            if (i >= 0) {
+                count[i] += 1;
+            } else {
+                count[max - i] += 1;
+            }
+        }
+        int[] sorted = new int[arr.length];
+        //先放入小于零的个数
+        int index1 = 0;
+        for (int i = R - 1; i > max; i -= 1) {
+            for (int j = 0; j < count[i]; j += 1) {
+                sorted[index1] = max - i;
+                index1 += 1;
+            }
+        }
+        //后放入大于零的个数
+        for (int i = 0; i <= max; i += 1) {
+            for (int j = 0; j < count[i]; j += 1) {
+                sorted[index1] = i;
+                index1 += 1;
+
+            }        }
+        return sorted;
     }
 }
